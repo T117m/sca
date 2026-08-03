@@ -8,27 +8,14 @@ import (
 
 const SCALE = 15
 
-type (
-	coords struct {
-		x, y uint
-	}
-
-	Grid struct {
-		width, height uint
-		lock          sync.RWMutex
-		cells         map[coords]bool
-	}
-)
+type Grid struct {
+	width, height uint
+	lock          sync.RWMutex
+	cells         []bool
+}
 
 func NewGrid(w, h uint) *Grid {
-	cells := make(map[coords]bool, h*w)
-	for x := range w {
-		for y := range h {
-			crd := coords{x, y}
-
-			cells[crd] = false
-		}
-	}
+	cells := make([]bool, h*w)
 
 	return &Grid{w, h, sync.RWMutex{}, cells}
 }
@@ -38,7 +25,7 @@ func (g *Grid) At(x, y uint) bool {
 		return false
 	}
 
-	return g.cells[coords{x, y}]
+	return g.cells[y*g.width+x]
 }
 
 func (g *Grid) Insert(x, y uint) {
@@ -46,47 +33,50 @@ func (g *Grid) Insert(x, y uint) {
 		return
 	}
 
-	g.cells[coords{x, y}] = true
+	g.cells[y*g.width+x] = true
 }
 
 func (g *Grid) Update(b, s string) {
 	g.lock.Lock()
 	defer g.lock.Unlock()
 
-	newCells := make(map[coords]bool, len(g.cells))
+	newCells := make([]bool, len(g.cells))
 
-	for crd := range g.cells {
-		newCells[crd] = applyRule(g.cells[crd], g.checkNeighbors(crd), b, s)
+	for y := range g.height {
+		for x := range g.width {
+			n := g.checkNeighbors(x, y)
+			newCells[y*g.width+x] = applyRule(g.cells[y*g.width+x], n, b, s)
+		}
 	}
 
 	g.cells = newCells
 }
 
-func (g *Grid) checkNeighbors(crd coords) uint8 {
+func (g *Grid) checkNeighbors(x, y uint) uint8 {
 	var n uint8
 
-	if g.At(crd.x-1, crd.y+1) {
+	if g.At(x-1, y+1) {
 		n++
 	}
-	if g.At(crd.x, crd.y+1) {
+	if g.At(x, y+1) {
 		n++
 	}
-	if g.At(crd.x+1, crd.y+1) {
+	if g.At(x+1, y+1) {
 		n++
 	}
-	if g.At(crd.x-1, crd.y) {
+	if g.At(x-1, y) {
 		n++
 	}
-	if g.At(crd.x+1, crd.y) {
+	if g.At(x+1, y) {
 		n++
 	}
-	if g.At(crd.x-1, crd.y-1) {
+	if g.At(x-1, y-1) {
 		n++
 	}
-	if g.At(crd.x, crd.y-1) {
+	if g.At(x, y-1) {
 		n++
 	}
-	if g.At(crd.x+1, crd.y-1) {
+	if g.At(x+1, y-1) {
 		n++
 	}
 
@@ -99,8 +89,9 @@ func DrawGrid(g *Grid) {
 
 	for x := range g.width {
 		for y := range g.height {
-			if g.cells[coords{x, y}] {
-				rl.DrawRectangle(int32(x)*SCALE, int32(y)*SCALE, SCALE, SCALE, rl.White)
+			if g.cells[y*g.width+x] {
+				xPos, yPos := int32(x)*SCALE, int32(y)*SCALE
+				rl.DrawRectangle(xPos, yPos, SCALE, SCALE, rl.White)
 			}
 		}
 	}

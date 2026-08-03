@@ -30,7 +30,7 @@ func validateRule(rule string) (b, s string, ok bool) {
 			default:
 				return "", "", false
 			}
-		} else if !hasB || (hasF && !hasS) {
+		} else if d, err := strconv.Atoi(string(r)); err != nil || !hasB || (hasF && !hasS) || d > 8 {
 			return "", "", false
 		}
 	}

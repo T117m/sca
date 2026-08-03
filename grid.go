@@ -49,30 +49,21 @@ func (g *Grid) Insert(x, y uint) {
 	g.cells[coords{x, y}] = true
 }
 
-func (g *Grid) Update() {
+func (g *Grid) Update(b, s string) {
 	g.lock.Lock()
 	defer g.lock.Unlock()
 
 	newCells := make(map[coords]bool, len(g.cells))
 
 	for crd := range g.cells {
-		n := g.checkNeighbors(crd)
-		alive := g.cells[crd]
-
-		if alive && (n == 2 || n == 3) {
-			newCells[crd] = true
-		} else if !alive && n == 3 {
-			newCells[crd] = true
-		} else {
-			newCells[crd] = false
-		}
+		newCells[crd] = applyRule(g.cells[crd], g.checkNeighbors(crd), b, s)
 	}
 
 	g.cells = newCells
 }
 
-func (g *Grid) checkNeighbors(crd coords) uint {
-	var n uint
+func (g *Grid) checkNeighbors(crd coords) uint8 {
+	var n uint8
 
 	if g.At(crd.x-1, crd.y+1) {
 		n++
@@ -110,8 +101,6 @@ func DrawGrid(g *Grid) {
 		for y := range g.height {
 			if g.cells[coords{x, y}] {
 				rl.DrawRectangle(int32(x)*SCALE, int32(y)*SCALE, SCALE, SCALE, rl.White)
-			} else {
-				rl.DrawRectangle(int32(x)*SCALE, int32(y)*SCALE, SCALE, SCALE, rl.Black)
 			}
 		}
 	}

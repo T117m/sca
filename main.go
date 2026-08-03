@@ -1,8 +1,8 @@
 package main
 
 import (
+	"fmt"
 	"os"
-	"strconv"
 	"time"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -10,25 +10,21 @@ import (
 
 func main() {
 	width, height := 100, 50
+	b, s := "3", "23"
+
 	if len(os.Args) > 1 {
-		w, err := strconv.Atoi(os.Args[1])
-		if err == nil {
-			width = w
-		}
-	}
-	if len(os.Args) > 2 {
-		h, err := strconv.Atoi(os.Args[2])
-		if err == nil {
-			height = h
+		if newB, newS, ok := validateRule(os.Args[1]); ok {
+			b, s = newB, newS
+		} else {
+			fmt.Println("Invalid rule given")
+			return
 		}
 	}
 
-	GRID := NewGrid(uint(width), uint(height))
-	GRID.Insert(4, 2)
-	GRID.Insert(5, 3)
-	GRID.Insert(5, 4)
-	GRID.Insert(4, 4)
-	GRID.Insert(3, 4)
+	g := NewGrid(uint(width), uint(height))
+	if width >= 3 && height >= 3 {
+		defaultGlider(g)
+	}
 
 	rl.SetTraceLogLevel(rl.LogError)
 
@@ -39,16 +35,23 @@ func main() {
 
 	go func() {
 		for !rl.WindowShouldClose() {
-			time.Sleep(150 * time.Millisecond)
-			GRID.Update()
+			time.Sleep(117 * time.Millisecond)
+			g.Update(b, s)
 		}
 	}()
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
-		rl.ClearBackground(rl.Gray)
-		DrawGrid(GRID)
-		//rl.DrawFPS(0, 0)
+		rl.ClearBackground(rl.Black)
+		DrawGrid(g)
 		rl.EndDrawing()
 	}
+}
+
+func defaultGlider(g *Grid) {
+	g.Insert(1, 0)
+	g.Insert(2, 1)
+	g.Insert(2, 2)
+	g.Insert(1, 2)
+	g.Insert(0, 2)
 }

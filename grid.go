@@ -6,7 +6,7 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-const SCALE = 15
+var SCALE int32 = 15
 
 type Grid struct {
 	width, height uint

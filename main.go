@@ -1,19 +1,27 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"os"
 	"time"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 func main() {
-	width, height := 100, 50
-	b, s := "3", "23"
+	var (
+		w, h  = flag.Int("w", 100, "Width"), flag.Int("h", 50, "Height")
+		ms    = flag.Int("ms", 117, "Milliseconds per tick")
+		scale = flag.Int("scale", 15, "Cell scale in pixels")
+		b, s  = "3", "23"
+	)
 
-	if len(os.Args) > 1 {
-		if newB, newS, ok := validateRule(os.Args[1]); ok {
+	flag.Parse()
+	width, height, tick := *w, *h, time.Duration(*ms)
+	SCALE = int32(*scale)
+
+	if len(flag.Args()) >= 1 {
+		if newB, newS, ok := validateRule(flag.Arg(0)); ok {
 			b, s = newB, newS
 		} else {
 			fmt.Println("Invalid rule given")
@@ -28,14 +36,14 @@ func main() {
 
 	rl.SetTraceLogLevel(rl.LogError)
 
-	rl.InitWindow(int32(width*SCALE), int32(height*SCALE), "sca (Simple Cellular Automata)")
+	rl.InitWindow(int32(width)*SCALE, int32(height)*SCALE, "sca")
 	defer rl.CloseWindow()
 
 	rl.SetTargetFPS(144)
 
 	go func() {
 		for !rl.WindowShouldClose() {
-			time.Sleep(117 * time.Millisecond)
+			time.Sleep(tick * time.Millisecond)
 			g.Update(b, s)
 		}
 	}()

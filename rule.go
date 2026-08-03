@@ -35,6 +35,10 @@ func validateRule(rule string) (b, s string, ok bool) {
 		}
 	}
 
+	if !hasB || !hasF || !hasS {
+		return "", "", false
+	}
+
 	split := strings.Split(rule, "/")
 	b = strings.TrimPrefix(split[0], "b")
 	s = strings.TrimPrefix(split[1], "s")

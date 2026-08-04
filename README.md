@@ -10,7 +10,7 @@ dimensions 100 by 50 cells, 117 miliseconds per tick and 15 pixels cell scale.
 #### TODO:
 
 - [x] Add width and height flags
-- [ ] Add fullscreen
+- [x] Add fullscreen
 - [ ] Add ability to launch multiple automata with different rulestrings
 - [ ] Add some kind of random noise generation
 - [ ] Add pause/resume

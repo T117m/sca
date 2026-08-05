@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"time"
 
+	atmt "github.com/T117m/sca/automata"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
+
+var SCALE int32 = 15
 
 func main() {
 	var (
@@ -18,7 +21,7 @@ func main() {
 	)
 
 	flag.Parse()
-	width, height, tick := *w, *h, time.Duration(*ms)
+	width, height, tick := uint(*w), uint(*h), time.Duration(*ms)
 	if *scale > 0 {
 		SCALE = int32(*scale)
 	} else {
@@ -27,7 +30,7 @@ func main() {
 	}
 
 	if len(flag.Args()) >= 1 {
-		if newB, newS, ok := validateRule(flag.Arg(0)); ok {
+		if newB, newS, ok := atmt.ValidateRule(flag.Arg(0)); ok {
 			b, s = newB, newS
 		} else {
 			fmt.Println("Invalid rule given. Consult the README.md")
@@ -42,16 +45,27 @@ func main() {
 
 	if *fscrn {
 		rl.ToggleBorderlessWindowed()
-		width = rl.GetScreenWidth() / *scale
-		height = rl.GetScreenHeight() / *scale
+		width = uint(rl.GetScreenWidth() / *scale)
+		height = uint(rl.GetScreenHeight() / *scale)
 	}
 
-	a := NewAutomata(uint(width), uint(height), b, s)
+	a := atmt.NewAutomata(uint(width), uint(height), b, s)
 	if width >= 3 && height >= 3 {
 		defaultGlider(a)
 	}
 
 	rl.SetTargetFPS(144)
+
+	DrawAutomata := func(a *atmt.Automata) {
+		for x := range width {
+			for y := range height {
+				if a.At(x, y) {
+					xPos, yPos := int32(x)*SCALE, int32(y)*SCALE
+					rl.DrawRectangle(xPos, yPos, SCALE, SCALE, rl.White)
+				}
+			}
+		}
+	}
 
 	go func() {
 		for !rl.WindowShouldClose() {
@@ -68,10 +82,11 @@ func main() {
 	}
 }
 
-func defaultGlider(a *Automata) {
+func defaultGlider(a *atmt.Automata) {
 	a.Insert(1, 0)
 	a.Insert(2, 1)
 	a.Insert(2, 2)
 	a.Insert(1, 2)
 	a.Insert(0, 2)
 }
+

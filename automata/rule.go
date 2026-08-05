@@ -1,4 +1,4 @@
-package main
+package automata
 
 import (
 	"slices"
@@ -7,7 +7,7 @@ import (
 	"unicode"
 )
 
-func validateRule(rule string) (b, s []uint8, ok bool) {
+func ValidateRule(rule string) (b, s []uint8, ok bool) {
 	hasB, hasF, hasS := false, false, false
 
 	for _, r := range strings.ToLower(rule) {

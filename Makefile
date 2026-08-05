@@ -5,4 +5,4 @@ else
 endif
 
 sca:
-	go build -o build/$(TARGET) .
+	go build -o build/$(TARGET) ./cmd/main.go

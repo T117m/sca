@@ -46,9 +46,9 @@ func main() {
 		height = rl.GetScreenHeight() / *scale
 	}
 
-	g := NewGrid(uint(width), uint(height))
+	a := NewAutomata(uint(width), uint(height))
 	if width >= 3 && height >= 3 {
-		defaultGlider(g)
+		defaultGlider(a)
 	}
 
 	rl.SetTargetFPS(144)
@@ -56,22 +56,22 @@ func main() {
 	go func() {
 		for !rl.WindowShouldClose() {
 			time.Sleep(tick * time.Millisecond)
-			g.Update(b, s)
+			a.Update(b, s)
 		}
 	}()
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Black)
-		DrawGrid(g)
+		DrawAutomata(a)
 		rl.EndDrawing()
 	}
 }
 
-func defaultGlider(g *Grid) {
-	g.Insert(1, 0)
-	g.Insert(2, 1)
-	g.Insert(2, 2)
-	g.Insert(1, 2)
-	g.Insert(0, 2)
+func defaultGlider(a *Automata) {
+	a.Insert(1, 0)
+	a.Insert(2, 1)
+	a.Insert(2, 2)
+	a.Insert(1, 2)
+	a.Insert(0, 2)
 }

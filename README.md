@@ -11,7 +11,9 @@ dimensions 100 by 50 cells, 117 miliseconds per tick and 15 pixels cell scale.
 
 - [x] Add width and height flags
 - [x] Add fullscreen
-- [ ] Add ability to launch multiple automata with different rulestrings
+- [ ] ~~Add ability to launch multiple automata with different rulestrings~~
+Not planned as raylib does not support multiple windows and simulating them 
+internally is too big of an abstraction for this project
 - [ ] Add some kind of random noise generation
 - [ ] Add pause/resume
 - [ ] Add editing

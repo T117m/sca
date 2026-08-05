@@ -1,9 +1,5 @@
 package automata
 
-import rl "github.com/gen2brain/raylib-go/raylib"
-
-var SCALE int32 = 15
-
 type Automata struct {
 	width, height uint
 	cells         []bool
@@ -76,13 +72,3 @@ func (a *Automata) checkNeighbors(x, y uint) uint8 {
 	return n
 }
 
-func DrawAutomata(a *Automata) {
-	for x := range a.width {
-		for y := range a.height {
-			if a.cells[y*a.width+x] {
-				xPos, yPos := int32(x)*SCALE, int32(y)*SCALE
-				rl.DrawRectangle(xPos, yPos, SCALE, SCALE, rl.White)
-			}
-		}
-	}
-}

@@ -14,7 +14,7 @@ func main() {
 		ms    = flag.Int("ms", 117, "Milliseconds per tick")
 		scale = flag.Int("scale", 15, "Cell scale in pixels")
 		fscrn = flag.Bool("f", false, "Toggle fullscreen (overrides w and h)")
-		b, s  = "3", "23"
+		b, s  = []uint8{3}, []uint8{2, 3}
 	)
 
 	flag.Parse()
@@ -46,7 +46,7 @@ func main() {
 		height = rl.GetScreenHeight() / *scale
 	}
 
-	a := NewAutomata(uint(width), uint(height))
+	a := NewAutomata(uint(width), uint(height), b, s)
 	if width >= 3 && height >= 3 {
 		defaultGlider(a)
 	}
@@ -56,7 +56,7 @@ func main() {
 	go func() {
 		for !rl.WindowShouldClose() {
 			time.Sleep(tick * time.Millisecond)
-			a.Update(b, s)
+			a.Update()
 		}
 	}()
 

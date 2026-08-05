@@ -1,12 +1,13 @@
 package main
 
 import (
+	"slices"
 	"strconv"
 	"strings"
 	"unicode"
 )
 
-func validateRule(rule string) (b, s string, ok bool) {
+func validateRule(rule string) (b, s []uint8, ok bool) {
 	hasB, hasF, hasS := false, false, false
 
 	for _, r := range strings.ToLower(rule) {
@@ -14,56 +15,60 @@ func validateRule(rule string) (b, s string, ok bool) {
 			switch r {
 			case 'b':
 				if hasB {
-					return "", "", false
+					return nil, nil, false
 				}
 				hasB = true
 			case '/':
 				if !hasB {
-					return "", "", false
+					return nil, nil, false
 				}
 				hasF = true
 			case 's':
 				if !hasB || !hasF {
-					return "", "", false
+					return nil, nil, false
 				}
 				hasS = true
 			default:
-				return "", "", false
+				return nil, nil, false
 			}
 		} else if d, err := strconv.Atoi(string(r)); err != nil || !hasB || (hasF && !hasS) || d > 8 {
-			return "", "", false
+			return nil, nil, false
 		}
 	}
 
 	if !hasB || !hasF || !hasS {
-		return "", "", false
+		return nil, nil, false
 	}
 
-	split := strings.Split(rule, "/")
-	b = strings.TrimPrefix(split[0], "b")
-	s = strings.TrimPrefix(split[1], "s")
+	var (
+		split = strings.Split(strings.ToLower(rule), "/")
+		bString = strings.TrimPrefix(split[0], "b")
+		sString = strings.TrimPrefix(split[1], "s")
+	)
+
+	b = make([]uint8, len(bString))
+	s = make([]uint8, len(sString))
+
+	for i, r := range bString {
+		d, _ := strconv.Atoi(string(r))
+		b[i] = uint8(d)
+	}
+
+	for i, r := range sString {
+		d, _ := strconv.Atoi(string(r))
+		s[i] = uint8(d)
+	}
 
 	return b, s, true
 }
 
-func applyRule(alive bool, n uint8, b, s string) bool {
-	if alive && has(s, n) {
+func applyRule(alive bool, n uint8, b, s []uint8) bool {
+	if alive && slices.Contains(s, n) {
 		return true
-	} else if !alive && has(b, n) {
+	} else if !alive && slices.Contains(b, n) {
 		return true
 	}
 
 	return false
 }
 
-func has(s string, x uint8) bool {
-	for _, r := range s {
-		if n, err := strconv.Atoi(string(r)); err == nil {
-			if uint8(n) == x {
-				return true
-			}
-		}
-	}
-
-	return false
-}

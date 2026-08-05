@@ -7,12 +7,13 @@ var SCALE int32 = 15
 type Automata struct {
 	width, height uint
 	cells         []bool
+	b, s          []uint8
 }
 
-func NewAutomata(w, h uint) *Automata {
+func NewAutomata(w, h uint, b, s []uint8) *Automata {
 	cells := make([]bool, h*w)
 
-	return &Automata{w, h, cells}
+	return &Automata{w, h, cells, b, s}
 }
 
 func (a *Automata) At(x, y uint) bool {
@@ -31,13 +32,13 @@ func (a *Automata) Insert(x, y uint) {
 	a.cells[y*a.width+x] = true
 }
 
-func (a *Automata) Update(b, s string) {
+func (a *Automata) Update() {
 	newCells := make([]bool, len(a.cells))
 
 	for y := range a.height {
 		for x := range a.width {
 			n := a.checkNeighbors(x, y)
-			newCells[y*a.width+x] = applyRule(a.cells[y*a.width+x], n, b, s)
+			newCells[y*a.width+x] = applyRule(a.cells[y*a.width+x], n, a.b, a.s)
 		}
 	}
 

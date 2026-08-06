@@ -86,6 +86,27 @@ func main() {
 			PAUSE = !PAUSE
 		}
 
+		if rl.IsMouseButtonDown(rl.MouseButtonLeft) {
+			mX, mY := convertMouseToGrid(rl.GetMousePosition())
+			if mX > WIDTH {
+				mX = WIDTH
+			}
+			if mY > HEIGHT {
+				mY = HEIGHT
+			}
+			a.Insert(mX, mY)
+		}
+		if rl.IsMouseButtonDown(rl.MouseButtonRight) {
+			mX, mY := convertMouseToGrid(rl.GetMousePosition())
+			if mX > WIDTH {
+				mX = WIDTH
+			}
+			if mY > HEIGHT {
+				mY = HEIGHT
+			}
+			a.Kill(mX, mY)
+		}
+
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Black)
 
@@ -100,4 +121,10 @@ func main() {
 
 		rl.EndDrawing()
 	}
+}
+
+func convertMouseToGrid(v rl.Vector2) (x, y uint) {
+	x = uint(float64(v.X) / float64(SCALE))
+	y = uint(float64(v.Y) / float64(SCALE))
+	return x, y
 }

@@ -15,7 +15,9 @@ func NewAutomata(w, h uint, b, s []uint8) *Automata {
 }
 
 func (a *Automata) At(x, y uint) bool {
-	if x >= a.width || y >= a.height {
+	coords := y*a.width + x
+
+	if x >= a.width || y >= a.height || coords >= uint(len(a.cells)) {
 		return false
 	}
 
@@ -23,11 +25,23 @@ func (a *Automata) At(x, y uint) bool {
 }
 
 func (a *Automata) Insert(x, y uint) {
-	if x > a.width || y > a.height {
+	coords := y*a.width + x
+
+	if x >= a.width || y >= a.height || coords >= uint(len(a.cells)) {
 		return
 	}
 
-	a.cells[y*a.width+x] = true
+	a.cells[coords] = true
+}
+
+func (a *Automata) Kill(x, y uint) {
+	coords := y*a.width + x
+
+	if x >= a.width || y >= a.height || coords >= uint(len(a.cells)) {
+		return
+	}
+
+	a.cells[coords] = false
 }
 
 func (a *Automata) Update() {

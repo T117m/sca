@@ -16,7 +16,7 @@ Not planned as raylib does not support multiple windows and simulating them
 internally is too big of an abstraction for this project
 - [x] Add some kind of random noise generation
 - [x] Add pause/resume
-- [ ] Add editing
+- [x] Add editing
 - [ ] Add no-borders flag (wrap around)
 - [ ] Add bg and cell colors flags
 - [ ] Make a man page

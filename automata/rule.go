@@ -31,8 +31,11 @@ func ValidateRule(rule string) (b, s []uint8, ok bool) {
 			default:
 				return nil, nil, false
 			}
-		} else if d, err := strconv.Atoi(string(r)); err != nil || !hasB || (hasF && !hasS) || d > 8 {
-			return nil, nil, false
+		} else {
+			d, err := strconv.Atoi(string(r))
+			if err != nil || !hasB || (hasF && !hasS) || d > 8 {
+				return nil, nil, false
+			}
 		}
 	}
 
@@ -41,7 +44,7 @@ func ValidateRule(rule string) (b, s []uint8, ok bool) {
 	}
 
 	var (
-		split = strings.Split(strings.ToLower(rule), "/")
+		split   = strings.Split(strings.ToLower(rule), "/")
 		bString = strings.TrimPrefix(split[0], "b")
 		sString = strings.TrimPrefix(split[1], "s")
 	)
@@ -71,4 +74,3 @@ func applyRule(alive bool, n uint8, b, s []uint8) bool {
 
 	return false
 }
-

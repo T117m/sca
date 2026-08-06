@@ -38,6 +38,8 @@ The compiled binary should be located in ./build/
 
 ### Usage
 
+#### CLI
+
 ```sh
 sca [flags] <rulestring>
 ```
@@ -48,7 +50,8 @@ The rulestring is expected to be in a format of "b#/s#", where:
 \# - digits 0-8. The b and s fields do not necessarly require one digit, they
 can accept multiple as well as none at all;\
 b - amount(s) of living neighbors needed for a dead cell to become alive;\
-/ - a separator between birth and survival;\
+/ - a separator between birth and survival. While technically unnecessary, made
+mandatory for aesthetical reasons;\
 s - amount(s) of living neighbors needed for a living cell to survive to the
 next tick.
 
@@ -59,6 +62,11 @@ Here are some examples of valid rulestrings:
 - b/s - Yes, this is still valid. Every cell will die tho;
 - B345/S2 - [Adam P. Goucher's](https://catagolue.hatsya.com/home) "Blinkers".
 Capital letters are also supported.
+
+#### Mouse/Keyboard
+
+Use mouse1 to create living cells. Use mouse2 to kill. Press space to 
+pause/resume.
 
 ---
 

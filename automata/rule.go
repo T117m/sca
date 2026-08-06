@@ -19,12 +19,12 @@ func ValidateRule(rule string) (b, s []uint8, ok bool) {
 				}
 				hasB = true
 			case '/':
-				if !hasB {
+				if !hasB || hasF {
 					return nil, nil, false
 				}
 				hasF = true
 			case 's':
-				if !hasB || !hasF {
+				if !hasB || !hasF || hasS {
 					return nil, nil, false
 				}
 				hasS = true

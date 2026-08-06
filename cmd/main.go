@@ -40,6 +40,7 @@ func init() {
 		fmt.Fprintln(os.Stderr, "Dimensions must be bigger than 0")
 		os.Exit(2)
 	}
+
 	if *scale > 0 {
 		SCALE = int32(*scale)
 	} else {

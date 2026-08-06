@@ -9,12 +9,12 @@ import (
 )
 
 var (
-	FSCRN  bool
-	WIDTH  uint
-	HEIGHT uint
-	SCALE  int32
-	TICK   time.Duration
-	B, S   = []uint8{3}, []uint8{2, 3}
+	FSCRN, RF, RC bool
+	WIDTH, HEIGHT uint
+
+	SCALE int32
+	TICK  time.Duration
+	B, S  = []uint8{3}, []uint8{2, 3}
 )
 
 func init() {
@@ -23,11 +23,15 @@ func init() {
 		ms    = flag.Int("ms", 117, "Milliseconds per tick")
 		scale = flag.Int("scale", 15, "Cell scale in pixels")
 		fscrn = flag.Bool("f", false, "Toggle fullscreen (overrides w and h)")
+		rc    = flag.Bool("rc", false, "Fill 1/5 of the automata in the center with random noise")
+		rf    = flag.Bool("rf", false, "Fill automata with random noise")
 	)
 
 	flag.Parse()
 
-	WIDTH, HEIGHT, TICK, FSCRN = uint(*w), uint(*h), time.Duration(*ms), *fscrn
+	FSCRN, RF, RC = *fscrn, *rf, *rc
+	WIDTH, HEIGHT = uint(*w), uint(*h)
+	TICK = time.Duration(*ms)
 
 	if *scale > 0 {
 		SCALE = int32(*scale)
@@ -58,8 +62,11 @@ func main() {
 
 	a := atmt.NewAutomata(uint(WIDTH), uint(HEIGHT), B, S)
 
-	if WIDTH >= 3 && HEIGHT >= 3 {
-		defaultGlider(a)
+	if RC {
+		a.RandomCenter()
+	}
+	if RF {
+		a.RandomFill()
 	}
 
 	rl.SetTargetFPS(144)
@@ -86,12 +93,4 @@ func main() {
 
 		rl.EndDrawing()
 	}
-}
-
-func defaultGlider(a *atmt.Automata) {
-	a.Insert(1, 0)
-	a.Insert(2, 1)
-	a.Insert(2, 2)
-	a.Insert(1, 2)
-	a.Insert(0, 2)
 }

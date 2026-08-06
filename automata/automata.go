@@ -1,5 +1,7 @@
 package automata
 
+import "math/rand"
+
 type Automata struct {
 	width, height uint
 	cells         []bool
@@ -70,4 +72,24 @@ func (a *Automata) checkNeighbors(x, y uint) uint8 {
 	}
 
 	return n
+}
+
+func (a *Automata) RandomFill() {
+	for y := range a.height {
+		for x := range a.width {
+			if rand.Intn(2) > 0 {
+				a.cells[y*a.width+x] = true
+			}
+		}
+	}
+}
+
+func (a *Automata) RandomCenter() {
+	for y := a.height * 2 / 5; y < a.height*3/5; y++ {
+		for x := a.width * 2 / 5; x < a.width*3/5; x++ {
+			if rand.Intn(2) > 0 {
+				a.cells[y*a.width+x] = true
+			}
+		}
+	}
 }

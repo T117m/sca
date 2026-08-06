@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"os"
 	"time"
 
 	atmt "github.com/T117m/sca/automata"
@@ -34,17 +36,23 @@ func init() {
 	WIDTH, HEIGHT = uint(*w), uint(*h)
 	TICK = time.Duration(*ms)
 
+	if *w < 0 || *h < 0 {
+		fmt.Fprintln(os.Stderr, "Dimensions must be bigger than 0")
+		os.Exit(2)
+	}
 	if *scale > 0 {
 		SCALE = int32(*scale)
 	} else {
-		panic("Scale must be bigger than 0")
+		fmt.Fprintln(os.Stderr, "Scale must be bigger than 0")
+		os.Exit(2)
 	}
 
 	if len(flag.Args()) >= 1 {
 		if newB, newS, ok := atmt.ValidateRule(flag.Arg(0)); ok {
 			B, S = newB, newS
 		} else {
-			panic("Invalid rule given. Consult the README.md")
+			fmt.Fprintln(os.Stderr, "Invalid rule given. Consult the README.md")
+			os.Exit(2)
 		}
 	}
 }

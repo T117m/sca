@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	FSCRN, RF, RC bool
-	WIDTH, HEIGHT uint
+	FSCRN, RF, RC, PAUSE bool
+	WIDTH, HEIGHT        uint
 
 	SCALE int32
 	TICK  time.Duration
@@ -25,11 +25,12 @@ func init() {
 		fscrn = flag.Bool("f", false, "Toggle fullscreen (overrides w and h)")
 		rc    = flag.Bool("rc", false, "Fill 1/5 of the automata in the center with random noise")
 		rf    = flag.Bool("rf", false, "Fill automata with random noise")
+		p     = flag.Bool("p", false, "Start paused")
 	)
 
 	flag.Parse()
 
-	FSCRN, RF, RC = *fscrn, *rf, *rc
+	FSCRN, RF, RC, PAUSE = *fscrn, *rf, *rc, *p
 	WIDTH, HEIGHT = uint(*w), uint(*h)
 	TICK = time.Duration(*ms)
 
@@ -74,11 +75,17 @@ func main() {
 	go func() {
 		for !rl.WindowShouldClose() {
 			time.Sleep(TICK * time.Millisecond)
-			a.Update()
+			if !PAUSE {
+				a.Update()
+			}
 		}
 	}()
 
 	for !rl.WindowShouldClose() {
+		if rl.IsKeyPressed(rl.KeySpace) {
+			PAUSE = !PAUSE
+		}
+
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Black)
 

@@ -33,8 +33,8 @@ func (a *Automata) Update() {
 
 	for y := range a.height {
 		for x := range a.width {
-			n := a.checkNeighbors(x, y)
-			newCells[y*a.width+x] = applyRule(a.cells[y*a.width+x], n, a.b, a.s)
+			c, n := y*a.width+x, a.checkNeighbors(x, y)
+			newCells[c] = applyRule(a.cells[c], n, a.b, a.s)
 		}
 	}
 
@@ -71,4 +71,3 @@ func (a *Automata) checkNeighbors(x, y uint) uint8 {
 
 	return n
 }
-

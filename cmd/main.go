@@ -2,74 +2,71 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"time"
 
 	atmt "github.com/T117m/sca/automata"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-var SCALE int32 = 15
+var (
+	FSCRN  bool
+	WIDTH  uint
+	HEIGHT uint
+	SCALE  int32
+	TICK   time.Duration
+	B, S   = []uint8{3}, []uint8{2, 3}
+)
 
-func main() {
+func init() {
 	var (
 		w, h  = flag.Int("w", 100, "Width"), flag.Int("h", 50, "Height")
 		ms    = flag.Int("ms", 117, "Milliseconds per tick")
 		scale = flag.Int("scale", 15, "Cell scale in pixels")
 		fscrn = flag.Bool("f", false, "Toggle fullscreen (overrides w and h)")
-		b, s  = []uint8{3}, []uint8{2, 3}
 	)
 
 	flag.Parse()
-	width, height, tick := uint(*w), uint(*h), time.Duration(*ms)
+
+	WIDTH, HEIGHT, TICK, FSCRN = uint(*w), uint(*h), time.Duration(*ms), *fscrn
+
 	if *scale > 0 {
 		SCALE = int32(*scale)
 	} else {
-		fmt.Println("Scale must be bigger than 0")
-		return
+		panic("Scale must be bigger than 0")
 	}
 
 	if len(flag.Args()) >= 1 {
 		if newB, newS, ok := atmt.ValidateRule(flag.Arg(0)); ok {
-			b, s = newB, newS
+			B, S = newB, newS
 		} else {
-			fmt.Println("Invalid rule given. Consult the README.md")
-			return
+			panic("Invalid rule given. Consult the README.md")
 		}
 	}
+}
 
+func main() {
 	rl.SetTraceLogLevel(rl.LogError)
 
-	rl.InitWindow(int32(width)*SCALE, int32(height)*SCALE, "sca")
+	rl.InitWindow(int32(WIDTH)*SCALE, int32(HEIGHT)*SCALE, "sca")
 	defer rl.CloseWindow()
 
-	if *fscrn {
+	if FSCRN {
 		rl.ToggleBorderlessWindowed()
-		width = uint(rl.GetScreenWidth() / *scale)
-		height = uint(rl.GetScreenHeight() / *scale)
+		WIDTH = uint(rl.GetScreenWidth() / int(SCALE))
+		HEIGHT = uint(rl.GetScreenHeight() / int(SCALE))
 	}
 
-	a := atmt.NewAutomata(uint(width), uint(height), b, s)
-	if width >= 3 && height >= 3 {
+	a := atmt.NewAutomata(uint(WIDTH), uint(HEIGHT), B, S)
+
+	if WIDTH >= 3 && HEIGHT >= 3 {
 		defaultGlider(a)
 	}
 
 	rl.SetTargetFPS(144)
 
-	DrawAutomata := func(a *atmt.Automata) {
-		for x := range width {
-			for y := range height {
-				if a.At(x, y) {
-					xPos, yPos := int32(x)*SCALE, int32(y)*SCALE
-					rl.DrawRectangle(xPos, yPos, SCALE, SCALE, rl.White)
-				}
-			}
-		}
-	}
-
 	go func() {
 		for !rl.WindowShouldClose() {
-			time.Sleep(tick * time.Millisecond)
+			time.Sleep(TICK * time.Millisecond)
 			a.Update()
 		}
 	}()
@@ -77,7 +74,16 @@ func main() {
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Black)
-		DrawAutomata(a)
+
+		for x := range WIDTH {
+			for y := range HEIGHT {
+				if a.At(x, y) {
+					xPos, yPos := int32(x)*SCALE, int32(y)*SCALE
+					rl.DrawRectangle(xPos, yPos, SCALE, SCALE, rl.White)
+				}
+			}
+		}
+
 		rl.EndDrawing()
 	}
 }
@@ -89,4 +95,3 @@ func defaultGlider(a *atmt.Automata) {
 	a.Insert(1, 2)
 	a.Insert(0, 2)
 }
-

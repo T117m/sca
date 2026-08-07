@@ -32,9 +32,8 @@ GNU Make
 #### Building
 
 ```sh
-make sca
+go build ./cmd/sca.go
 ```
-The compiled binary should be located in ./build/
 
 ### Usage
 

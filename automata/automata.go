@@ -3,25 +3,42 @@ package automata
 import "math/rand"
 
 type Automata struct {
+	wrapped       bool
 	width, height uint
 	cells         []bool
 	b, s          []uint8
 }
 
-func NewAutomata(w, h uint, b, s []uint8) *Automata {
-	cells := make([]bool, h*w)
+func NewAutomata(width, height uint, b, s []uint8, isWrapped bool) *Automata {
+	cells := make([]bool, width*height)
 
-	return &Automata{w, h, cells, b, s}
+	return &Automata{isWrapped, width, height, cells, b, s}
 }
 
-func (a *Automata) At(x, y uint) bool {
-	coords := y*a.width + x
+func (a *Automata) At(x, y int) bool {
+	w, h := int(a.width), int(a.height)
 
-	if x >= a.width || y >= a.height || coords >= uint(len(a.cells)) {
-		return false
+	if y*w+x >= len(a.cells) || x >= w || y >= h || x < 0 || y < 0 {
+		if !a.wrapped {
+			return false
+		}
+
+		if x >= w {
+			x = 0
+		}
+		if y >= h {
+			y = 0
+		}
+
+		if x < 0 {
+			x = w-1
+		}
+		if y < 0 {
+			y = h-1
+		}
 	}
 
-	return a.cells[y*a.width+x]
+	return a.cells[y*w+x]
 }
 
 func (a *Automata) Insert(x, y uint) {
@@ -58,30 +75,33 @@ func (a *Automata) Update() {
 }
 
 func (a *Automata) checkNeighbors(x, y uint) uint8 {
-	var n uint8
+	var (
+		n uint8
+		sX, sY = int(x), int(y)
+	)
 
-	if a.At(x-1, y+1) {
+	if a.At(sX-1, sY+1) {
 		n++
 	}
-	if a.At(x, y+1) {
+	if a.At(sX, sY+1) {
 		n++
 	}
-	if a.At(x+1, y+1) {
+	if a.At(sX+1, sY+1) {
 		n++
 	}
-	if a.At(x-1, y) {
+	if a.At(sX-1, sY) {
 		n++
 	}
-	if a.At(x+1, y) {
+	if a.At(sX+1, sY) {
 		n++
 	}
-	if a.At(x-1, y-1) {
+	if a.At(sX-1, sY-1) {
 		n++
 	}
-	if a.At(x, y-1) {
+	if a.At(sX, sY-1) {
 		n++
 	}
-	if a.At(x+1, y-1) {
+	if a.At(sX+1, sY-1) {
 		n++
 	}
 

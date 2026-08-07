@@ -11,8 +11,9 @@ import (
 )
 
 var (
-	FSCRN, RF, RC, PAUSE bool
-	WIDTH, HEIGHT        uint
+	PAUSE, RF, RC bool
+	FSCRN, WRAP    bool
+	WIDTH, HEIGHT uint
 
 	SCALE int32
 	TICK  time.Duration
@@ -25,14 +26,16 @@ func init() {
 		ms    = flag.Int("ms", 117, "Milliseconds per tick")
 		scale = flag.Int("scale", 15, "Cell scale in pixels")
 		fscrn = flag.Bool("f", false, "Toggle fullscreen (overrides w and h)")
-		rc    = flag.Bool("rc", false, "Fill 1/5 of the automata in the center with random noise")
-		rf    = flag.Bool("rf", false, "Fill automata with random noise")
 		p     = flag.Bool("p", false, "Start paused")
+		wrp   = flag.Bool("wrap", false, "Make the grid wrap around")
+		rf    = flag.Bool("rf", false, "Fill automata with random noise")
+		rc    = flag.Bool("rc", false,
+			"Fill 1/5 of the automata in the center with random noise")
 	)
 
 	flag.Parse()
 
-	FSCRN, RF, RC, PAUSE = *fscrn, *rf, *rc, *p
+	FSCRN, RF, RC, PAUSE, WRAP = *fscrn, *rf, *rc, *p, *wrp
 	WIDTH, HEIGHT = uint(*w), uint(*h)
 	TICK = time.Duration(*ms)
 
@@ -52,7 +55,7 @@ func init() {
 		if newB, newS, ok := atmt.ValidateRule(flag.Arg(0)); ok {
 			B, S = newB, newS
 		} else {
-			fmt.Fprintln(os.Stderr, "Invalid rule given. Consult the README.md")
+			fmt.Fprintln(os.Stderr, "Invalid rule given. Consult the README")
 			os.Exit(2)
 		}
 	}
@@ -70,7 +73,7 @@ func main() {
 		HEIGHT = uint(rl.GetScreenHeight() / int(SCALE))
 	}
 
-	a := atmt.NewAutomata(uint(WIDTH), uint(HEIGHT), B, S)
+	a := atmt.NewAutomata(uint(WIDTH), uint(HEIGHT), B, S, WRAP)
 
 	if RC {
 		a.RandomCenter()
@@ -121,7 +124,7 @@ func main() {
 
 		for x := range WIDTH {
 			for y := range HEIGHT {
-				if a.At(x, y) {
+				if a.At(int(x), int(y)) {
 					xPos, yPos := int32(x)*SCALE, int32(y)*SCALE
 					rl.DrawRectangle(xPos, yPos, SCALE, SCALE, rl.White)
 				}

@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	atmt "github.com/T117m/sca/automata"
@@ -12,8 +14,10 @@ import (
 
 var (
 	PAUSE, RF, RC bool
-	FSCRN, WRAP    bool
+	FSCRN, WRAP   bool
 	WIDTH, HEIGHT uint
+
+	DEADCOLOR, ALIVECOLOR rl.Color
 
 	SCALE int32
 	TICK  time.Duration
@@ -25,12 +29,15 @@ func init() {
 		w, h  = flag.Int("w", 100, "Width"), flag.Int("h", 50, "Height")
 		ms    = flag.Int("ms", 117, "Milliseconds per tick")
 		scale = flag.Int("scale", 15, "Cell scale in pixels")
+		dc    = flag.String("color-dead", "black", "Color of a dead cell")
+		ac    = flag.String("color-alive", "white", "Color of a living cell")
 		fscrn = flag.Bool("f", false, "Toggle fullscreen (overrides w and h)")
 		p     = flag.Bool("p", false, "Start paused")
 		wrp   = flag.Bool("wrap", false, "Make the grid wrap around")
 		rf    = flag.Bool("rf", false, "Fill automata with random noise")
 		rc    = flag.Bool("rc", false,
 			"Fill 1/5 of the automata in the center with random noise")
+		ok bool
 	)
 
 	flag.Parse()
@@ -59,6 +66,96 @@ func init() {
 			os.Exit(2)
 		}
 	}
+
+	DEADCOLOR, ok = getColor(*dc)
+	if !ok {
+		fmt.Fprintln(os.Stderr, "Invalid dead cell color given")
+		os.Exit(2)
+	}
+
+	ALIVECOLOR, ok = getColor(*ac)
+	if !ok {
+		fmt.Fprintln(os.Stderr, "Invalid living cell color given")
+		os.Exit(2)
+	}
+}
+
+func getColor(s string) (rl.Color, bool) {
+	switch l := strings.ToLower(s); l {
+	case "beige":
+		return rl.Beige, true
+	case "black":
+		return rl.Black, true
+	case "blue":
+		return rl.Blue, true
+	case "brown":
+		return rl.Brown, true
+	case "dark blue":
+		return rl.DarkBlue, true
+	case "dark brown":
+		return rl.DarkBrown, true
+	case "dark gray":
+		return rl.DarkGray, true
+	case "dark green":
+		return rl.DarkGreen, true
+	case "dark purple":
+		return rl.DarkPurple, true
+	case "gold":
+		return rl.Gold, true
+	case "gray":
+		return rl.Gray, true
+	case "green":
+		return rl.Green, true
+	case "light gray":
+		return rl.LightGray, true
+	case "lime":
+		return rl.Lime, true
+	case "magenta":
+		return rl.Magenta, true
+	case "maroon":
+		return rl.Maroon, true
+	case "orange":
+		return rl.Orange, true
+	case "pink":
+		return rl.Pink, true
+	case "purple":
+		return rl.Purple, true
+	case "red":
+		return rl.Red, true
+	case "sky blue":
+		return rl.SkyBlue, true
+	case "violet":
+		return rl.Violet, true
+	case "white":
+		return rl.White, true
+	case "yellow":
+		return rl.Yellow, true
+	default:
+		if strings.HasPrefix(l, "#") && len(l) == 7 {
+			red := l[1:3]
+			grn := l[3:5]
+			blu := l[5:]
+
+			r, err := strconv.ParseUint(red, 16, 8)
+			if err != nil {
+				break
+			}
+
+			g, err := strconv.ParseUint(grn, 16, 8)
+			if err != nil {
+				break
+			}
+
+			b, err := strconv.ParseUint(blu, 16, 8)
+			if err != nil {
+				break
+			}
+
+			return rl.NewColor(uint8(r), uint8(g), uint8(b), 255), true
+		}
+	}
+
+	return rl.Color{}, false
 }
 
 func main() {
@@ -120,13 +217,13 @@ func main() {
 		}
 
 		rl.BeginDrawing()
-		rl.ClearBackground(rl.Black)
+		rl.ClearBackground(DEADCOLOR)
 
 		for x := range WIDTH {
 			for y := range HEIGHT {
 				if a.At(int(x), int(y)) {
 					xPos, yPos := int32(x)*SCALE, int32(y)*SCALE
-					rl.DrawRectangle(xPos, yPos, SCALE, SCALE, rl.White)
+					rl.DrawRectangle(xPos, yPos, SCALE, SCALE, ALIVECOLOR)
 				}
 			}
 		}

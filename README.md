@@ -18,7 +18,7 @@ internally is too big of an abstraction for this project
 - [x] Add pause/resume
 - [x] Add editing
 - [x] Add no-borders flag (wrap around)
-- [ ] Add bg and cell colors flags
+- [x] Add bg and cell colors flags
 - [ ] Make a man page
 
 ### Building from source
@@ -61,6 +61,12 @@ Here are some examples of valid rulestrings:
 - b/s - Yes, this is still valid. Every cell will die tho;
 - B345/S2 - [Adam P. Goucher's](https://catagolue.hatsya.com/home) "Blinkers".
 Capital letters are also supported.
+
+Color flags accept either a hex color string (#00000 - #ffffff) or one of these
+predefined raylib color options: "beige", "black", "blue", "brown", "dark blue"
+, "dark brown", "dark gray", "dark green", "dark purple", "gold", "gray",
+"green", "light gray", "lime", "magenta", "maroon", "orange", "pink", "purple",
+"red", "sky blue", "violet", "white", "yellow". Capital lettes are supported.
 
 #### Mouse/Keyboard
 

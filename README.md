@@ -26,7 +26,7 @@ internally is too big of an abstraction for this project
 #### Requirements
 
 [Go 1.26.5 or later](https://go.dev/dl/)\
-[raylib-go](https://github.com/gen2brain/raylib-go)\
+[raylib-go](https://github.com/gen2brain/raylib-go)
 
 #### Building
 

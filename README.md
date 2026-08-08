@@ -27,7 +27,6 @@ internally is too big of an abstraction for this project
 
 [Go 1.26.5 or later](https://go.dev/dl/)\
 [raylib-go](https://github.com/gen2brain/raylib-go)\
-GNU Make
 
 #### Building
 

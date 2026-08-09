@@ -1,0 +1,173 @@
+.TH sca 1 "2026-08-09" "github.com/T117m/sca" "User Commands"
+.SH NAME
+sca \- Simple Cellular Automata
+.SH SYNOPSIS
+.SY sca
+.RI [ options ] " " [ rulestring ]
+.
+.SY sca
+\-\-help
+.YS
+.SH DESCRIPTION
+.B "sca"
+is a simple programm that launches an interactive graphical cellular automata 
+based on a provided rulestring and settings flags.
+.SH EXAMPLES
+.TP
+.EX
+.B sca
+.EE
+Launch empty \(lqConway's Game of Life\(rq with default settings.
+.TP
+.BR sca " -w " 67 " -h " "67 b3/s234"
+Launch empty \(lqAnt Colony\(rq in a 67 by 67 window.
+.TP
+.EX
+.BR sca " -f -rc -scale " 1 " -ms " "50 b3/s1234"
+.EE
+Launch \(lqMazectric\(rq in fullscreen with a randomly filled center, 1 pixel
+cells and 50 miliseconds per tick.
+.TP
+.EX
+.BR sca " -rf -p -color-dead " gray " -color-alive " "\(dq#8E6F45\(dq B345/S2"
+.EE
+Launch paused \(lqBlinkers\(rq in fully randomly filled default sized window
+with gray dead cells and teal living cells.
+.SH OPTIONS
+.TP
+.EX
+.BI "\-color\-alive " color
+.IR "Color" " of a living cell."
+.TP
+.EX
+.BI "\-color\-dead " color
+.IR "Color" " of a dead cell."
+.TP
+.EX
+.B \-f
+.EE
+.RB "Toggle fullscreen (overrides " \-w " and "\-h ")."
+.TP
+.EX
+.BI "\-h " cells
+.EE
+.RI "Height in " cells .
+.TP
+.EX
+.BI "\-ms " miliseconds
+.EE
+.IR Milliseconds " per tick."
+.TP
+.EX
+.B \-p
+.EE
+Start paused
+.TP
+.EX
+.B \-rc
+.EE
+Fill 1/5 of the automata in the center with random noise.
+.TP
+.EX
+.B \-rf
+.EE
+Fill the entire automata with random noise.
+.TP
+.EX
+.BI "\-scale " pixels
+.EE
+.RI "Cell scale in " pixels .
+.TP
+.EX
+.BI "\-w " cells
+.EE
+.RI "Width in " cells .
+.TP
+.EX
+.B \-wrap
+.EE
+Make the board wrap around.
+.SH RULESTRING
+.P
+Every celluar automata is operated by a rule for every cell which dictates the
+amount of living neighbors needed for survival of a living cell, and the 
+amount of living neghbors needed for for birth of a new cell if it is dead. 
+With any other amount of living neghbors the cell dies either of loneliness 
+or overpopulation. This programm accepts this rule as a string of format 
+.BR "\(dqb#/s#\(dq" ", where:"
+
+.B #
+\- digits 0\-8. The b and s fields do not necessarly require one digit, they
+can accept multiple as well as none at all;
+.br
+.B b 
+\- amount(s) of living neighbors needed for a dead cell to become alive;
+.br
+.B / 
+\- a separator between birth and survival. While technically unnecessary,
+made mandatory for aesthetical reasons;
+.br
+.B s 
+\- amount(s) of living neighbors needed for a living cell to survive to the
+next tick.
+
+Here are some examples of valid rulestrings:
+
+.BR "\(bu b3/s23" " \- famous Conway's Game of Life;"
+.br
+.BR "\(bu b3/s234" " - carykh's \(lqAnt Colony\(rq;"
+.br
+.BR "\(bu b/s" " \- Yes, this is still valid. Every cell will die tho;"
+.br
+.BR "\(bu B345/S2" " \- "
+.UR https://\:catagolue\:.hatsya\:.com/\:home
+.I "Adam P. Goucher's"
+ \(lqBlinkers\(rq
+.UE .
+Capital letters are also supported.
+.SH COLORS
+Color flags accept either a hex color string (\fI#00000\fP - \fI#ffffff\fP) or 
+one of these predefined raylib color options: "\fIbeige\fP", "\fIblack\fP",
+"\fIblue\fP", "\fIbrown\fP", "\fIdark blue\fP", "\fIdark brown\fP",
+"\fIdark gray\fP", "\fIdark green\fP", "\fIdark purple\fP", "\fIgold\fP",
+"\fIgray\fP", "\fIgreen\fP", "\fIlight gray\fP", "\fIlime\fP", "\fImagenta\fP",
+"\fImaroon\fP", "\fIorange\fP", "\fIpink\fP", "\fIpurple\fP", "\fIred\fP",
+"\fIsky blue\fP", "\fIviolet\fP", "\fIwhite\fP", "\fIyellow\fP". Capital lettes
+are supported.
+
+.SH MOUSE AND KEYBOARD INPUTS
+Click \fImouse1\fP to \fBcreate\fP living cells.
+
+Click \fImouse2\fP to \fBkill\fP living cells.
+
+Press \fIspace\fP to \fBpause/resume\fP the automata.
+.SH DEFAULTS
+.TP
+.EX
+.BI "\-color\-alive=" white
+.EE
+.TP
+.EX
+.BI "\-color\-dead=" black
+.EE
+.TP
+.EX
+.BI "\-h=" 50
+.EE
+.TP
+.EX
+.BI "\-ms=" 117
+.EE
+.TP
+.EX
+.BI "\-scale=" 15
+.EE
+.TP
+.EX
+.BI "\-w=" 100
+.EE
+.P
+.RI "The default " rulestring " is"
+.BR b3/s23 .
+.SH AUTHOR
+Written by T117m.

@@ -2,12 +2,11 @@
 .SH NAME
 sca \- Simple Cellular Automata
 .SH SYNOPSIS
-.SY sca
+.B sca
 .RI [ options ] " " [ rulestring ]
-.
-.SY sca
+.br
+.B sca
 \-\-help
-.YS
 .SH DESCRIPTION
 .B "sca"
 is a simple programm that launches an interactive graphical cellular automata 
@@ -36,22 +35,19 @@ with gray dead cells and teal living cells.
 .SH OPTIONS
 .TP
 .EX
-.BI "\-color\-alive " color
-.IR "Color" " of a living cell."
-.TP
-.EX
-.BI "\-color\-dead " color
-.IR "Color" " of a dead cell."
-.TP
-.EX
-.B \-f
+.BI "\-w " cells
 .EE
-.RB "Toggle fullscreen (overrides " \-w " and "\-h ")."
+.RI "Width in " cells .
 .TP
 .EX
 .BI "\-h " cells
 .EE
 .RI "Height in " cells .
+.TP
+.EX
+.B \-f
+.EE
+.RB "Toggle fullscreen (overrides " \-w " and "\-h ")."
 .TP
 .EX
 .BI "\-ms " miliseconds
@@ -79,9 +75,12 @@ Fill the entire automata with random noise.
 .RI "Cell scale in " pixels .
 .TP
 .EX
-.BI "\-w " cells
-.EE
-.RI "Width in " cells .
+.BI "\-color\-alive " color
+.IR "Color" " of a living cell."
+.TP
+.EX
+.BI "\-color\-dead " color
+.IR "Color" " of a dead cell."
 .TP
 .EX
 .B \-wrap
@@ -122,9 +121,8 @@ Here are some examples of valid rulestrings:
 .BR "\(bu B345/S2" " \- "
 .UR https://\:catagolue\:.hatsya\:.com/\:home
 .I "Adam P. Goucher's"
- \(lqBlinkers\(rq
-.UE .
-Capital letters are also supported.
+.UE " "
+\(lqBlinkers\(rq. Capital letters are also supported.
 .SH COLORS
 Color flags accept either a hex color string (\fI#00000\fP - \fI#ffffff\fP) or 
 one of these predefined raylib color options: "\fIbeige\fP", "\fIblack\fP",

@@ -34,7 +34,7 @@ func init() {
 		ac    = flag.String("color-alive", "white", "Color of a living cell")
 		fscrn = flag.Bool("f", false, "Toggle fullscreen (overrides w and h)")
 		p     = flag.Bool("p", false, "Start paused")
-		wrp   = flag.Bool("wrap", false, "Make the grid wrap around")
+		wrp   = flag.Bool("wrap", false, "Make the board wrap around")
 		rf    = flag.Bool("rf", false, "Fill automata with random noise")
 		rc    = flag.Bool("rc", false,
 			"Fill 1/5 of the automata in the center with random noise")
@@ -203,7 +203,7 @@ func main() {
 		}
 
 		if rl.IsMouseButtonDown(rl.MouseButtonLeft) {
-			mX, mY := convertMouseToGrid(rl.GetMousePosition())
+			mX, mY := convertMouseToBoard(rl.GetMousePosition())
 			if mX > WIDTH {
 				mX = WIDTH
 			}
@@ -213,7 +213,7 @@ func main() {
 			a.Insert(mX, mY)
 		}
 		if rl.IsMouseButtonDown(rl.MouseButtonRight) {
-			mX, mY := convertMouseToGrid(rl.GetMousePosition())
+			mX, mY := convertMouseToBoard(rl.GetMousePosition())
 			if mX > WIDTH {
 				mX = WIDTH
 			}
@@ -239,7 +239,7 @@ func main() {
 	}
 }
 
-func convertMouseToGrid(v rl.Vector2) (x, y uint) {
+func convertMouseToBoard(v rl.Vector2) (x, y uint) {
 	x = uint(float64(v.X) / float64(SCALE))
 	y = uint(float64(v.Y) / float64(SCALE))
 	return x, y

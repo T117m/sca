@@ -21,6 +21,7 @@ var (
 
 	SCALE int32
 	TICK  time.Duration
+	RLSTR = "b3/s23"
 	B, S  = []uint8{3}, []uint8{2, 3}
 )
 
@@ -58,13 +59,19 @@ func init() {
 		os.Exit(2)
 	}
 
-	if len(flag.Args()) >= 1 {
-		if newB, newS, ok := atmt.ValidateRule(flag.Arg(0)); ok {
+	argsLen := len(flag.Args())
+	if argsLen == 1 {
+		RLSTR = flag.Arg(0)
+		if newB, newS, ok := atmt.ValidateRule(RLSTR); ok {
 			B, S = newB, newS
 		} else {
-			fmt.Fprintln(os.Stderr, "Invalid rule given. Consult the README")
+			fmt.Fprintln(os.Stderr,
+				"Invalid rule given; consult the README or the man page")
 			os.Exit(2)
 		}
+	} else if argsLen > 1 {
+		fmt.Fprintln(os.Stderr, "Too many arguments")
+		os.Exit(2)
 	}
 
 	DEADCOLOR, ok = getColor(*dc)
@@ -161,7 +168,7 @@ func getColor(s string) (rl.Color, bool) {
 func main() {
 	rl.SetTraceLogLevel(rl.LogError)
 
-	rl.InitWindow(int32(WIDTH)*SCALE, int32(HEIGHT)*SCALE, "sca")
+	rl.InitWindow(int32(WIDTH)*SCALE, int32(HEIGHT)*SCALE, RLSTR)
 	defer rl.CloseWindow()
 
 	if FSCRN {

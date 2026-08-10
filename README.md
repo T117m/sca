@@ -4,23 +4,6 @@ A simple program for launching 2D cellular automata with custom rulestrings and
 dimensions that can be paused and edited. The default rulestring is b3/s23 with
 dimensions 100 by 50 cells, 117 miliseconds per tick and 15 pixels cell scale.
 
-> [!Warning]
-> This is WIP
-
-#### TODO:
-
-- [x] Add width and height flags
-- [x] Add fullscreen
-- [ ] ~~Add ability to launch multiple automata with different rulestrings~~
-Not planned as raylib does not support multiple windows and simulating them 
-internally is too big of an abstraction for this project
-- [x] Add some kind of random noise generation
-- [x] Add pause/resume
-- [x] Add editing
-- [x] Add no-borders flag (wrap around)
-- [x] Add bg and cell colors flags
-- [ ] Make a man page
-
 ### Building from source
 
 #### Requirements
@@ -34,24 +17,41 @@ internally is too big of an abstraction for this project
 go build ./cmd/sca.go
 ```
 
+### Installaion
+
+#### GNU/Linux
+
+Run as root (with ```doas```, ```sudo```, ```su``` or any other preferred way)
+```./install.sh```.
+
+#### WIndows
+
+Start PowersShell as administrator. Can be done with
+```ps1
+Start-Process powershell -Verb RunAs
+```
+
+Navigate to project direcory and run ```.\install.ps1```
+
 ### Usage
 
 #### CLI
 
 ```sh
-sca [flags] <rulestring>
+sca [flags] [rulestring]
 ```
 
-The list of available flags can be accessed through ```sca --help```.
-The rulestring is expected to be in a format of "b#/s#", where:
+The list of available flags and their defaults can be accessed through 
+```sca --help``` or ```man sca``` if you're on GNU/Linux. The rulestring is 
+expected to be in a format of "b#/s#", where:
 
-\# - digits 0-8. The b and s fields do not necessarly require one digit, they
-can accept multiple as well as none at all;\
-b - amount(s) of living neighbors needed for a dead cell to become alive;\
-/ - a separator between birth and survival. While technically unnecessary, made
-mandatory for aesthetical reasons;\
-s - amount(s) of living neighbors needed for a living cell to survive to the
-next tick.
+**\#** - digits 0-8. The b and s fields do not necessarly require one digit, 
+they can accept multiple as well as none at all;\
+**b** - amount(s) of living neighbors needed for a dead cell to become alive;\
+**/** - a separator between birth and survival. While technically unnecessary, 
+made mandatory for aesthetical reasons;\
+**s** - amount(s) of living neighbors needed for a living cell to survive to 
+the next tick.
 
 Here are some examples of valid rulestrings:
 

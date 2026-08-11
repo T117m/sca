@@ -2,7 +2,7 @@
 set -e
 
 BINARY=./sca
-MANPAGE=./sca.1.gz
+MANPAGE=./doc/sca.1.gz
 PREFIX=${PREFIX:-/usr/local}
 BINDIR=${DESTDIR}${PREFIX}/bin
 MANDIR=${DESTDIR}${PREFIX}/share/man/man1

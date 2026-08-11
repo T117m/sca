@@ -4,6 +4,8 @@ A simple program for launching 2D cellular automata with custom rulestrings and
 dimensions that can be paused and edited. The default rulestring is b3/s23 with
 dimensions 100 by 50 cells, 117 miliseconds per tick and 15 pixels cell scale.
 
+![b3/s12345](doc/demo.gif)
+
 ### Building from source
 
 #### Requirements
@@ -65,12 +67,14 @@ Color flags accept either a hex color string (#00000 - #ffffff) or one of these
 predefined raylib color options: "beige", "black", "blue", "brown", "dark blue"
 , "dark brown", "dark gray", "dark green", "dark purple", "gold", "gray",
 "green", "light gray", "lime", "magenta", "maroon", "orange", "pink", "purple",
-"red", "sky blue", "violet", "white", "yellow". Capital lettes are supported.
+"red", "sky blue", "violet", "white", "yellow". Capital letters are supported.
 
 #### Mouse/Keyboard
 
 Use mouse1 to create living cells. Use mouse2 to kill. Press space to 
 pause/resume.
+
+![b3/s23](doc/edit.gif)
 
 ---
 
